@@ -16,18 +16,23 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/xrepo.cmake")
 endif()
 # Include xrepo.cmake so we can use xrepo_package function.
 include(${CMAKE_BINARY_DIR}/xrepo.cmake)
+
 xrepo_package(
-    "crc32c 1.1.2"
+  "snappy 1.1.10"
+  CONFIGS "shared=true"
 )
 xrepo_package(
-    "snappy 1.1.10"
+  "zlib v1.3.1"
+  CONFIGS "shared=true"
 )
 xrepo_package(
-    "zlib v1.3.1"
+  "zstd v1.5.6"
+  CONFIGS "shared=true"
 )
 xrepo_package(
-    "zstd v1.5.6"
+  "crc32c 1.1.2"
 )
+
 find_package(zlib REQUIRED)
 include_directories(${crc32c_INCLUDE_DIRS})
 include_directories(${zlib_INCLUDE_DIRS})
@@ -146,7 +151,7 @@ endif(BUILD_SHARED_LIBS)
 # Must be included before CMAKE_INSTALL_INCLUDEDIR is used.
 include(GNUInstallDirs)
 
-add_library(leveldb "")
+add_library(leveldb "SHARED")
 target_sources(leveldb
   PRIVATE
     "${PROJECT_BINARY_DIR}/${LEVELDB_PORT_CONFIG_DIR}/port_config.h"
