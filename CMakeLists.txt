@@ -19,25 +19,29 @@ include(${CMAKE_BINARY_DIR}/xrepo.cmake)
 
 xrepo_package(
   "snappy 1.1.10"
-  CONFIGS "shared=true"
+  CONFIGS "mt=true"
 )
 xrepo_package(
   "zlib v1.3.1"
-  CONFIGS "shared=true"
+  CONFIGS "mt=true"
 )
 xrepo_package(
   "zstd v1.5.6"
-  CONFIGS "shared=true"
+  CONFIGS "mt=true"
 )
 xrepo_package(
   "crc32c 1.1.2"
+  CONFIGS "mt=true"
 )
 
-find_package(zlib REQUIRED)
 include_directories(${crc32c_INCLUDE_DIRS})
 include_directories(${zlib_INCLUDE_DIRS})
 include_directories(${snappy_INCLUDE_DIRS})
 include_directories(${zstd_INCLUDE_DIRS})
+link_directories(${crc32c_LIBRARY_DIRS})
+link_directories(${zlib_LIBRARY_DIRS})
+link_directories(${snappy_LIBRARY_DIRS})
+link_directories(${zstd_LIBRARY_DIRS})
 
 # C standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_C_STANDARD)
@@ -303,19 +307,15 @@ if(HAVE_CLANG_THREAD_SAFETY)
 endif(HAVE_CLANG_THREAD_SAFETY)
 
 if(HAVE_CRC32C)
-  link_directories(${crc32c_LIBRARY_DIRS})
   target_link_libraries(leveldb ${crc32c_LIBRARIES})
 endif(HAVE_CRC32C)
 if(HAVE_SNAPPY)
-  link_directories(${snappy_LIBRARY_DIRS})
   target_link_libraries(leveldb ${snappy_LIBRARIES})
 endif(HAVE_SNAPPY)
 if(HAVE_ZSTD)
-  link_directories(${zstd_LIBRARY_DIRS})
   target_link_libraries(leveldb ${zstd_LIBRARIES})
 endif(HAVE_ZSTD)
 if(HAVE_ZLIB)
-  link_directories(${zlib_LIBRARY_DIRS})
   target_link_libraries(leveldb ${zlib_LIBRARIES})
 endif(HAVE_ZLIB)
 if(HAVE_TCMALLOC)
