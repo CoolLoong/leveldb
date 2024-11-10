@@ -6,6 +6,34 @@ cmake_minimum_required(VERSION 3.9)
 # Keep the version below in sync with the one in db.h
 project(leveldb VERSION 1.23.0 LANGUAGES C CXX)
 
+# Download xrepo.cmake if not exists in build directory.
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/xrepo.cmake")
+    message(STATUS "Downloading xrepo.cmake from https://github.com/xmake-io/xrepo-cmake/")
+    # mirror https://cdn.jsdelivr.net/gh/xmake-io/xrepo-cmake@main/xrepo.cmake
+    file(DOWNLOAD "https://raw.githubusercontent.com/xmake-io/xrepo-cmake/main/xrepo.cmake"
+                  "${CMAKE_BINARY_DIR}/xrepo.cmake"
+                  TLS_VERIFY ON)
+endif()
+# Include xrepo.cmake so we can use xrepo_package function.
+include(${CMAKE_BINARY_DIR}/xrepo.cmake)
+xrepo_package(
+    "crc32c 1.1.2"
+)
+xrepo_package(
+    "snappy 1.1.10"
+)
+xrepo_package(
+    "zlib v1.3.1"
+)
+xrepo_package(
+    "zstd v1.5.6"
+)
+find_package(zlib REQUIRED)
+include_directories(${crc32c_INCLUDE_DIRS})
+include_directories(${zlib_INCLUDE_DIRS})
+include_directories(${snappy_INCLUDE_DIRS})
+include_directories(${zstd_INCLUDE_DIRS})
+
 # C standard can be overridden when this is used as a sub-project.
 if(NOT CMAKE_C_STANDARD)
   # This project can use C11, but will gracefully decay down to C89.
@@ -38,13 +66,8 @@ include(CheckIncludeFile)
 check_include_file("unistd.h" HAVE_UNISTD_H)
 
 include(CheckLibraryExists)
-check_library_exists(crc32c crc32c_value "" HAVE_CRC32C)
-check_library_exists(snappy snappy_compress "" HAVE_SNAPPY)
-check_library_exists(zstd zstd_compress "" HAVE_ZSTD)
-check_library_exists(zlibstatic deflate "" HAVE_ZSTD)
 check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
-
-#remove when check_library_exits starts working
+set(HAVE_CRC32C ON)
 set(HAVE_SNAPPY ON)
 set(HAVE_ZSTD ON)
 set(HAVE_ZLIB ON)
@@ -275,17 +298,17 @@ if(HAVE_CLANG_THREAD_SAFETY)
 endif(HAVE_CLANG_THREAD_SAFETY)
 
 if(HAVE_CRC32C)
-  target_link_libraries(leveldb crc32c)
+  link_directories(${crc32c_LIBRARY_DIRS})
 endif(HAVE_CRC32C)
 if(HAVE_SNAPPY)
-  target_link_libraries(leveldb snappy)
+  link_directories(${snappy_LIBRARY_DIRS})
 endif(HAVE_SNAPPY)
 if(HAVE_ZSTD)
-  target_link_libraries(leveldb libzstd_static)
+  link_directories(${zstd_LIBRARY_DIRS})
 endif(HAVE_ZSTD)
 if(HAVE_ZLIB)
-  target_link_libraries(leveldb zlibstatic)
-endif(HAVE_ZSTD)
+  link_directories(${zlib_LIBRARY_DIRS})
+endif(HAVE_ZLIB)
 if(HAVE_TCMALLOC)
   target_link_libraries(leveldb tcmalloc)
 endif(HAVE_TCMALLOC)

@@ -25,14 +25,16 @@
 #if HAVE_CRC32C
 #include <crc32c/crc32c.h>
 #endif  // HAVE_CRC32C
-//#if HAVE_SNAPPY
+#if HAVE_SNAPPY
 #include <snappy.h>
-//#endif  // HAVE_SNAPPY
-//#if HAVE_ZSTD
+#endif  // HAVE_SNAPPY
+#if HAVE_ZSTD
 #define ZSTD_STATIC_LINKING_ONLY  // For ZSTD_compressionParameters.
 #include <zstd.h>
-//#endif  // HAVE_ZSTD
+#endif  // HAVE_ZSTD
+#if HAVE_ZLIB
 #include <zlib.h>
+#endif  // HAVE_ZLIB
 
 #include <cassert>
 #include <condition_variable>  // NOLINT
