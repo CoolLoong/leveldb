@@ -41,7 +41,10 @@ jobs:
           mkdir -p build && cd build
           export BUILD_SHARED_LIBS=on
           cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
-      - run: ls -R build/
+      - name: Upload libleveldb shared library
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/libleveldb.so
 
 
   build-macos-gcc:
@@ -61,4 +64,7 @@ jobs:
           mkdir -p build && cd build
           export BUILD_SHARED_LIBS=on
           cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
-      - run: ls -R build/
+      - name: Upload libleveldb shared library
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/libleveldb.dylib
