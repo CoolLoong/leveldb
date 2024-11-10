@@ -40,7 +40,7 @@ jobs:
         run: |
           mkdir -p build && cd build
           export BUILD_SHARED_LIBS=on
-          cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+          cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
       - name: Upload libleveldb shared library
         uses: actions/upload-artifact@v3
         with:
@@ -63,7 +63,7 @@ jobs:
         run: |
           mkdir -p build && cd build
           export BUILD_SHARED_LIBS=on
-          cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+          cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
       - name: Upload libleveldb shared library
         uses: actions/upload-artifact@v3
         with:

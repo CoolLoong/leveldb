@@ -149,6 +149,7 @@ include_directories(
 
 if(BUILD_SHARED_LIBS)
   # Only export LEVELDB_EXPORT symbols from the shared library.
+  message(STATUS "Building shared library. Defining LEVELDB_SHARED_LIBRARY.")
   add_compile_options(-fvisibility=hidden)
 endif(BUILD_SHARED_LIBS)
 
